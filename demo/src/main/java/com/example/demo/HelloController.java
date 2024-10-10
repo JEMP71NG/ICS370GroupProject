@@ -38,7 +38,7 @@ public class HelloController implements Initializable {
     }
 
     public void onNextButtonClick(ActionEvent actionEvent) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("second-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(GolfApplication.class.getResource("second-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
 
         ((Stage)nextButton.getScene().getWindow()).setScene(scene);
