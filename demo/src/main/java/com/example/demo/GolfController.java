@@ -14,10 +14,7 @@ import com.example.demo.domain.member;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class GolfController implements Initializable {
 
@@ -85,12 +82,18 @@ public class GolfController implements Initializable {
 
     private void updateReservationsList() {
         reservationsListView.getItems().clear();
-        for (TeeTime teeTime : teeTimes.values()) {
-            for (member m : teeTime.getMembers()) {
-                reservationsListView.getItems().add(m.getName() + " - Tee Time: " + teeTime.getTime());
-            }
-        }
+
+        // Sort the tee times by time (keys in the map)
+        teeTimes.keySet().stream()
+                .sorted() // This will sort the keys (tee time values) in ascending order
+                .forEach(teeTimeValue -> {
+                    TeeTime teeTime = teeTimes.get(teeTimeValue);
+                    for (member m : teeTime.getMembers()) {
+                        reservationsListView.getItems().add(m.getName() + " - Tee Time: " + teeTime.getTime());
+                    }
+                });
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
