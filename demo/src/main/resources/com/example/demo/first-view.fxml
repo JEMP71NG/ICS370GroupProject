@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.demo.GolfController">
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.GolfController">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
-    <Label text="Golf Scheduling App" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label style="-fx-font-size: 24px; -fx-font-weight: bold;" text="Golf Scheduling App" />
 
-    <TextField fx:id="memberNameField" promptText="Enter Member Name"/>
-    <TextField fx:id="teeTimeField" promptText="Enter Tee Time (e.g., 10)"/>
+    <TextField fx:id="memberNameField" promptText="Enter Member Name" />
+    <TextField fx:id="teeTimeField" promptText="Enter Tee Time (e.g., 10)" />
 
-    <Button text="Reserve Tee Time" onAction="#onReserveButtonClick"/>
-    <Button text="Cancel Reservation" onAction="#onCancelButtonClick"/>
+    <Button onAction="#onReserveButtonClick" text="Reserve Tee Time" />
+    <Button onAction="#onCancelButtonClick" text="Cancel Reservation" />
 
-    <Label text="Current Reservations:"/>
-    <ListView fx:id="reservationsListView" prefHeight="150"/>
+    <Label text="Current Reservations:" />
+    <ListView fx:id="reservationsListView" prefHeight="150" />
 
-    <Label fx:id="welcomeText" text="Status: Ready" style="-fx-text-fill: green;"/>
+    <Label fx:id="welcomeText" style="-fx-text-fill: green;" text="Status: Ready" />
+   <BorderPane prefHeight="200.0" prefWidth="200.0" />
 </VBox>

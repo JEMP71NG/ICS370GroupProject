@@ -15,6 +15,8 @@ import com.example.demo.domain.member;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class GolfController implements Initializable {
@@ -31,22 +33,24 @@ public class GolfController implements Initializable {
     @FXML
     private ListView<String> reservationsListView;
 
-    private TeeTime teeTime;
+    // Map to store tee times associated with different tee time slots
+    private Map<Integer, TeeTime> teeTimes = new HashMap<>();
 
     @FXML
     protected void onReserveButtonClick() {
         String memberName = memberNameField.getText();
         int teeTimeValue = Integer.parseInt(teeTimeField.getText());
 
-        if (teeTime == null) {
-            teeTime = new TeeTime(teeTimeValue, 1, new ArrayList<>());
-        }
+        // Get the tee time object for the specified time or create a new one if it doesn't exist
+        TeeTime teeTime = teeTimes.getOrDefault(teeTimeValue, new TeeTime(teeTimeValue, 1, new ArrayList<>()));
 
         member newMember = new member(memberName, teeTime.getMembers().size() + 1);
         boolean reserved = teeTime.reserve(newMember);
+
         if (reserved) {
+            teeTimes.put(teeTimeValue, teeTime); // Store the updated tee time
             updateReservationsList();
-            welcomeText.setText("Reservation successful for " + memberName);
+            welcomeText.setText("Reservation successful for " + memberName + " at tee time " + teeTimeValue);
         } else {
             welcomeText.setText("Tee time is full. Reservation failed.");
         }
@@ -54,27 +58,34 @@ public class GolfController implements Initializable {
 
     @FXML
     protected void onCancelButtonClick() {
-        if (teeTime == null) {
-            welcomeText.setText("No reservations to cancel.");
-            return;
-        }
-
         String memberName = memberNameField.getText();
+        int teeTimeValue = Integer.parseInt(teeTimeField.getText());
 
-        for (member m : teeTime.getMembers()) {
-            if (m.getName().equals(memberName)) {
-                teeTime.cancelReservation(m);
-                updateReservationsList();
-                welcomeText.setText("Reservation canceled for " + memberName);
-                return;
+        TeeTime teeTime = teeTimes.get(teeTimeValue);
+
+        if (teeTime != null) {
+            for (member m : teeTime.getMembers()) {
+                if (m.getName().equals(memberName)) {
+                    teeTime.cancelReservation(m);
+                    if (teeTime.getMembers().isEmpty()) {
+                        teeTimes.remove(teeTimeValue); // Remove empty tee time
+                    } else {
+                        teeTimes.put(teeTimeValue, teeTime); // Update tee time
+                    }
+                    updateReservationsList();
+                    welcomeText.setText("Reservation canceled for " + memberName);
+                    return;
+                }
             }
+            welcomeText.setText("Member not found in reservation.");
+        } else {
+            welcomeText.setText("No reservations found for the given tee time.");
         }
-        welcomeText.setText("Member not found in reservation.");
     }
 
     private void updateReservationsList() {
         reservationsListView.getItems().clear();
-        if (teeTime != null) {
+        for (TeeTime teeTime : teeTimes.values()) {
             for (member m : teeTime.getMembers()) {
                 reservationsListView.getItems().add(m.getName() + " - Tee Time: " + teeTime.getTime());
             }
