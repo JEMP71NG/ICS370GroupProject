@@ -1,3 +1,4 @@
+
 package com.example.demo;
 
 import javafx.event.ActionEvent;
@@ -5,45 +6,84 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import com.example.demo.domain.TeeTime;
+import com.example.demo.domain.member;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GolfController implements Initializable {
+
     @FXML
     private Label welcomeText;
 
     @FXML
-    private Slider sliderValue;
+    private TextField memberNameField;
 
     @FXML
-    private Button nextButton;
-
+    private TextField teeTimeField;
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Slider set to " +  ((int)sliderValue.getValue()));
+    private ListView<String> reservationsListView;
+
+    private TeeTime teeTime;
+
+    @FXML
+    protected void onReserveButtonClick() {
+        String memberName = memberNameField.getText();
+        int teeTimeValue = Integer.parseInt(teeTimeField.getText());
+
+        if (teeTime == null) {
+            teeTime = new TeeTime(teeTimeValue, 1, new ArrayList<>());
+        }
+
+        member newMember = new member(memberName, teeTime.getMembers().size() + 1);
+        boolean reserved = teeTime.reserve(newMember);
+        if (reserved) {
+            updateReservationsList();
+            welcomeText.setText("Reservation successful for " + memberName);
+        } else {
+            welcomeText.setText("Tee time is full. Reservation failed.");
+        }
     }
 
-    public void onResetButtonClick() {
-        sliderValue.setValue(0);
+    @FXML
+    protected void onCancelButtonClick() {
+        if (teeTime == null) {
+            welcomeText.setText("No reservations to cancel.");
+            return;
+        }
+
+        String memberName = memberNameField.getText();
+
+        for (member m : teeTime.getMembers()) {
+            if (m.getName().equals(memberName)) {
+                teeTime.cancelReservation(m);
+                updateReservationsList();
+                welcomeText.setText("Reservation canceled for " + memberName);
+                return;
+            }
+        }
+        welcomeText.setText("Member not found in reservation.");
     }
 
-    public void onNextButtonClick(ActionEvent actionEvent) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(GolfApplication.class.getResource("second-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-
-        ((Stage)nextButton.getScene().getWindow()).setScene(scene);
-
+    private void updateReservationsList() {
+        reservationsListView.getItems().clear();
+        if (teeTime != null) {
+            for (member m : teeTime.getMembers()) {
+                reservationsListView.getItems().add(m.getName() + " - Tee Time: " + teeTime.getTime());
+            }
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        // Initialize components if needed
+        updateReservationsList();
     }
 }
