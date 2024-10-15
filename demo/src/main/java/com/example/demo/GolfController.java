@@ -67,7 +67,7 @@ public class GolfController {
     }
 
     @FXML
-    protected void onCancelButtonClick() {
+    /*protected void onCancelButtonClick() {
         String memberName = memberNameField.getText();
         String dateTimeString = dateTimeField.getText();
 
@@ -100,6 +100,38 @@ public class GolfController {
             welcomeText.setText("Member not found in reservation.");
         } else {
             welcomeText.setText("No reservations found for the given date and time.");
+        }
+    }*/
+
+    protected void onCancelButtonClick() {
+        String selectedReservation = reservationsListView.getSelectionModel().getSelectedItem();
+
+        if (selectedReservation != null) {
+            // Extract member name and tee time from the selected reservation string
+            String[] parts = selectedReservation.split(" - Tee Time: ");
+            String memberName = parts[0];
+            String teeTimeKey = parts[1];  // Assuming the format is "MemberName - Tee Time: teeTimeKey"
+
+            TeeTime teeTime = teeTimes.get(LocalDateTime.parse(teeTimeKey, DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a")));
+
+            if (teeTime != null) {
+                // Remove the member from the tee time
+                teeTime.getMembers().removeIf(m -> m.getName().equals(memberName));
+
+                // Update or remove the tee time in the map
+                if (teeTime.getMembers().isEmpty()) {
+                    teeTimes.remove(LocalDateTime.parse(teeTimeKey, DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a"))); // Remove empty tee time
+                } else {
+                    teeTimes.put(LocalDateTime.parse(teeTimeKey, DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a")), teeTime); // Update tee time
+                }
+
+                updateReservationsList();
+                welcomeText.setText("Reservation canceled for " + memberName);
+            } else {
+                welcomeText.setText("No reservations found for the given tee time.");
+            }
+        } else {
+            welcomeText.setText("Please select a reservation to cancel.");
         }
     }
 
