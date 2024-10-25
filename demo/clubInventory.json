@@ -1,0 +1,25 @@
+{
+  "courseID": "1234",
+  "clubInventory": [
+    {
+      "clubsID": 1,
+      "isReserved":true
+    },
+    {
+      "clubsID": 2,
+      "isReserved":true
+    },
+    {
+      "clubsID": 3,
+      "isReserved":true
+    },
+    {
+      "clubsID": 4,
+      "isReserved":true
+    },
+    {
+      "clubsID": 5,
+      "isReserved":true
+    }
+  ]
+}
