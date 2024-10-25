@@ -3,23 +3,23 @@
   "clubInventory": [
     {
       "clubsID": 1,
-      "isReserved":true
+      "isReserved":false
     },
     {
       "clubsID": 2,
-      "isReserved":true
+      "isReserved":false
     },
     {
       "clubsID": 3,
-      "isReserved":true
+      "isReserved":false
     },
     {
       "clubsID": 4,
-      "isReserved":true
+      "isReserved":false
     },
     {
       "clubsID": 5,
-      "isReserved":true
+      "isReserved":false
     }
   ]
 }
