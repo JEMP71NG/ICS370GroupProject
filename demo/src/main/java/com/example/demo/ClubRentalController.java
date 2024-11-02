@@ -23,6 +23,8 @@ import java.net.URL;
 import java.nio.file.StandardOpenOption;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class ClubRentalController {
     private Stage stage;
@@ -58,7 +60,7 @@ public class ClubRentalController {
     }*/
 
     public void loadClubInventory() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/demo/clubInventory.json")) {
+        try (InputStream inputStream = getClass().getResourceAsStream("/com/example/demo/clubInventory.json")) {
             if (inputStream == null) {
                 System.out.println("Error: clubInventory.json file not found.");
                 return;
