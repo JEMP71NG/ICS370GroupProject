@@ -17,8 +17,7 @@
 
 
     <Button text="Reserve/Cancel Tee Time" onAction="#goToReserveTeeTime"/>
-    <Button text="Register for Tournament" onAction="#onCancelButtonClick"/>
-    <Button text="Rent a Set of Clubs" onAction="#onCancelButtonClick"/>
+
 
     <Label text="Current Reservations:"/>
     <ListView fx:id="reservationsListView" prefHeight="150"/>
