@@ -17,10 +17,8 @@
 
 
     <Button text="Reserve/Cancel Tee Time" onAction="#goToReserveTeeTime"/>
+    <Button text="Rent a Set of Clubs" onAction="#goToClubRental"/>
 
-
-    <Label text="Current Reservations:"/>
-    <ListView fx:id="reservationsListView" prefHeight="150"/>
 
     <Label fx:id="welcomeText" text="Status: Ready" style="-fx-text-fill: green;"/>
 </VBox>
