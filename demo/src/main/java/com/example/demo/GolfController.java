@@ -1,14 +1,16 @@
-
 package com.example.demo;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Label;
+import javafx.scene.control.DatePicker;
 import com.example.demo.domain.TeeTime;
 import com.example.demo.domain.member;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +22,10 @@ public class GolfController {
     private TextField memberNameField;
 
     @FXML
-    private TextField dateTimeField;
+    private DatePicker dateTimeField;
+
+    @FXML
+    private TextField timeField;
 
     @FXML
     private ListView<String> reservationsListView;
@@ -29,26 +34,35 @@ public class GolfController {
     private Label welcomeText;
 
     // Map to store tee times associated with different date and time slots
-    private Map<LocalDateTime, TeeTime> teeTimes = new HashMap<>();
+    private final Map<LocalDateTime, TeeTime> teeTimes = new HashMap<>();
 
     @FXML
     protected void onReserveButtonClick() {
         String memberName = memberNameField.getText();
-        String dateTimeString = dateTimeField.getText(); // User input for date and time
+
+        // Get the selected date from the DatePicker
+        LocalDate selectedDate = dateTimeField.getValue();
+        if (selectedDate == null) {
+            welcomeText.setText("Please choose a date.");
+            return;
+        }
+
+        // Get the time from the TextField
+        String timeString = timeField.getText();
+        LocalTime selectedTime;
+        try {
+            selectedTime = LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm")); // Parses time in HH:mm format
+        } catch (Exception e) {
+            welcomeText.setText("Invalid time format. Please use HH:mm with the 24 Hour format.");
+            return;
+        }
+
+        // Create LocalDateTime using selected date and time
+        LocalDateTime teeTimeValue = LocalDateTime.of(selectedDate, selectedTime);
 
         // Validate that memberName is not empty
         if (memberName == null || memberName.trim().isEmpty()) {
             welcomeText.setText("Please enter a member name.");
-            return;
-        }
-
-        // Validate that the dateTimeString is in the correct format
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
-        LocalDateTime teeTimeValue;
-        try {
-            teeTimeValue = LocalDateTime.parse(dateTimeString, formatter);
-        } catch (Exception e) {
-            welcomeText.setText("Invalid date and time. Please use MM/DD/YYYY h:mm AM/PM format.");
             return;
         }
 
@@ -60,49 +74,13 @@ public class GolfController {
         if (reserved) {
             teeTimes.put(teeTimeValue, teeTime);
             updateReservationsList();
-            welcomeText.setText("Reservation successful for " + memberName + " at " + dateTimeString);
+            welcomeText.setText("Reservation successful for " + memberName + " at " + teeTimeValue);
         } else {
             welcomeText.setText("Tee time is full. Reservation failed.");
         }
     }
 
     @FXML
-    /*protected void onCancelButtonClick() {
-        String memberName = memberNameField.getText();
-        String dateTimeString = dateTimeField.getText();
-
-        // Validate that the dateTimeString is in the correct format
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy h:mm a");
-        LocalDateTime teeTimeValue;
-        try {
-            teeTimeValue = LocalDateTime.parse(dateTimeString, formatter);
-        } catch (Exception e) {
-            welcomeText.setText("Invalid date and time. Please use MM/DD/YYYY h:mm AM/PM format.");
-            return;
-        }
-
-        TeeTime teeTime = teeTimes.get(teeTimeValue);
-
-        if (teeTime != null) {
-            for (member m : teeTime.getMembers()) {
-                if (m.getName().equals(memberName)) {
-                    teeTime.cancelReservation(m);
-                    if (teeTime.getMembers().isEmpty()) {
-                        teeTimes.remove(teeTimeValue);
-                    } else {
-                        teeTimes.put(teeTimeValue, teeTime);
-                    }
-                    updateReservationsList();
-                    welcomeText.setText("Reservation canceled for " + memberName);
-                    return;
-                }
-            }
-            welcomeText.setText("Member not found in reservation.");
-        } else {
-            welcomeText.setText("No reservations found for the given date and time.");
-        }
-    }*/
-
     protected void onCancelButtonClick() {
         String selectedReservation = reservationsListView.getSelectionModel().getSelectedItem();
 

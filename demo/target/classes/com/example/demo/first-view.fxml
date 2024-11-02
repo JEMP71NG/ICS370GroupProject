@@ -13,7 +13,8 @@
     <Label text="Golf Scheduling App" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
     <TextField fx:id="memberNameField" promptText="Enter Member Name"/>
-    <TextField fx:id="dateTimeField" promptText="Enter date and time (MM/DD/YYYY HH:MM AM/PM)"/>
+    <DatePicker fx:id="dateTimeField" promptText="Choose the Date"/>
+    <TextField fx:id="timeField" promptText="Enter time (HH:mm)"/>
 
     <Button text="Reserve Tee Time" onAction="#onReserveButtonClick"/>
     <Button text="Cancel Reservation" onAction="#onCancelButtonClick"/>
