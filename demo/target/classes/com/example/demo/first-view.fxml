@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.demo.GolfController">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Golf Scheduling App" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="memberNameField" promptText="Enter Member Name"/>
+    <TextField fx:id="dateTimeField" promptText="Enter date and time (MM/DD/YYYY HH:MM AM/PM)"/>
+
+    <Button text="Reserve Tee Time" onAction="#onReserveButtonClick"/>
+    <Button text="Cancel Reservation" onAction="#onCancelButtonClick"/>
+
+    <Label text="Current Reservations:"/>
+    <ListView fx:id="reservationsListView" prefHeight="150"/>
+
+    <Label fx:id="welcomeText" text="Status: Ready" style="-fx-text-fill: green;"/>
+</VBox>
