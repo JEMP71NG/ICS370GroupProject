@@ -12,7 +12,7 @@ public class GolfApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(GolfApplication.class.getResource("home-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-        stage.setTitle("Home Page");
+        stage.setTitle("Golf Scheduler");
         stage.setScene(scene);
         stage.show();
     }

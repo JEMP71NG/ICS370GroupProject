@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.demo.GolfController">
+<VBox alignment="CENTER" spacing="15" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.GolfController">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
+    <Text style="-fx-font-size: 20; -fx-font-weight: bold;" text="Reserve or Cancel a Tee Time" />
 
-    <Label text="Golf Scheduling App" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <TableView fx:id="teeTimeTable" prefHeight="200" prefWidth="600">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="Name" />
+            <TableColumn fx:id="dateColumn" text="Date" />
+            <TableColumn fx:id="timeColumn" text="Time" />
+        </columns>
+    </TableView>
 
-    <TextField fx:id="memberNameField" promptText="Enter Member Name"/>
-    <DatePicker fx:id="dateTimeField" promptText="Choose the Date"/>
-    <TextField fx:id="timeField" promptText="Enter time (HH:mm)"/>
+    <TextField fx:id="nameField" promptText="Enter Your Name" />
+    <DatePicker fx:id="dateTimeField" promptText="Select Date" />
+    <TextField fx:id="timeField" promptText="Enter Time (HH:mm)" />
 
-    <Button text="Reserve Tee Time" onAction="#onReserveButtonClick"/>
-    <Button text="Cancel Reservation" onAction="#onCancelButtonClick"/>
-
-    <Label text="Current Reservations:"/>
-    <ListView fx:id="reservationsListView" prefHeight="150"/>
-
-    <Label fx:id="welcomeText" text="Status: Ready" style="-fx-text-fill: green;"/>
+    <Button onAction="#confirmReservation" text="Confirm Reservation" />
+    <Button onAction="#cancelReservation" text="Cancel Reservation" />
 </VBox>

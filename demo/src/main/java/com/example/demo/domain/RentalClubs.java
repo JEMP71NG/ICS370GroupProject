@@ -1,48 +1,59 @@
 package com.example.demo.domain;
 
 public class RentalClubs {
+    private int clubsID;
+    private int courseID;
+    private boolean isReserved;
+    private String rentedTime;
+    private String returnedTime;
+    private String renterName;
 
-    public int clubsID;
-    public int courseID;
-    public boolean isReserved;
-    public int rentedTime;
-
-//constructor
-    public RentalClubs (int clubsID, int time, int courseID, boolean reserved){
-
-        this.rentedTime = time;
-        this.courseID = courseID;
-        this.isReserved = reserved;
+    public RentalClubs(int clubsID, String rentedTime, String returnedTime, int courseID, boolean isReserved, String renterName) {
         this.clubsID = clubsID;
-    }
-    //getters and setters
-    public int getClubsID(){
-        return this.clubsID;
-    }
-    public void setClubsID(int clubsID){
-        this.clubsID = clubsID;
-    }
-    public int getClubsCourseID(){
-        return this.courseID;
-    }
-    public void setClubsCourseID(int courseID){
+        this.rentedTime = rentedTime;
+        this.returnedTime = returnedTime;
         this.courseID = courseID;
+        this.isReserved = isReserved;
+        this.renterName = renterName;
     }
-    public boolean isReserved(){
-        return this.isReserved;
+
+    public int getClubsID() {
+        return clubsID;
     }
-    public void setIsReserved(boolean isReserved){
+
+    public int getCourseID() {
+        return courseID;
+    }
+
+    public boolean isIsReserved() {
+        return isReserved;
+    }
+
+    public void setReserved(boolean isReserved) {
         this.isReserved = isReserved;
     }
-    public int getRentedTime(){
-        return this.rentedTime;
-    }
-    public void setRentedTime(int time){
-        this.rentedTime = time;
+
+    public String getRentedTime() {
+        return rentedTime;
     }
 
+    public void setRentedTime(String rentedTime) {
+        this.rentedTime = rentedTime;
+    }
 
+    public String getReturnedTime() {
+        return returnedTime;
+    }
 
+    public void setReturnedTime(String returnedTime) {
+        this.returnedTime = returnedTime;
+    }
 
+    public String getRenterName() {
+        return renterName;
+    }
 
+    public void setRenterName(String renterName) {
+        this.renterName = renterName;
+    }
 }

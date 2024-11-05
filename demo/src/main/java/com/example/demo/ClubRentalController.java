@@ -1,120 +1,173 @@
 package com.example.demo;
 
-import javafx.event.ActionEvent;
+import com.example.demo.domain.RentalClubs;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
-import javafx.stage.Stage;
-import org.json.JSONObject;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.net.URL;
-import java.nio.file.StandardOpenOption;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClubRentalController {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-    @FXML
-    private ListView<String> clubListView;
-    @FXML
-    private TextField rentalQuantityField;
 
-    private Map<String, Integer> clubInventory = new HashMap<>();
+    @FXML
+    private TableView<RentalClubs> clubTable;
+    @FXML
+    private TableColumn<RentalClubs, Integer> clubsIDColumn;
+    @FXML
+    private TableColumn<RentalClubs, Integer> courseIDColumn;
+    @FXML
+    private TableColumn<RentalClubs, Boolean> isReservedColumn;
+    @FXML
+    private TableColumn<RentalClubs, String> rentedTimeColumn;
+    @FXML
+    private TableColumn<RentalClubs, String> returnedTimeColumn;
+    @FXML
+    private TableColumn<RentalClubs, String> renterNameColumn;
 
+    @FXML
+    private TextField renterNameField;
+    @FXML
+    private DatePicker rentalDatePicker;
+    @FXML
+    private TextField rentalTimeField;
+
+    private List<RentalClubs> rentalClubsList;
+
+    @FXML
     public void initialize() {
+        clubsIDColumn.setCellValueFactory(new PropertyValueFactory<>("clubsID"));
+        courseIDColumn.setCellValueFactory(new PropertyValueFactory<>("courseID"));
+        isReservedColumn.setCellValueFactory(new PropertyValueFactory<>("isReserved"));
+        rentedTimeColumn.setCellValueFactory(new PropertyValueFactory<>("rentedTime"));
+        returnedTimeColumn.setCellValueFactory(new PropertyValueFactory<>("returnedTime"));
+        renterNameColumn.setCellValueFactory(new PropertyValueFactory<>("renterName"));
+
         loadClubInventory();
-        populateClubListView();
     }
 
-    /*private void loadClubInventory() {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get("src/main/resources/com/example/demo/clubInventory.json")));
-            JSONObject jsonObject = new JSONObject(content);
-            Iterator<String> keys = jsonObject.keys();
+    private void loadClubInventory() {
+        JSONParser jsonParser = new JSONParser();
 
-            while (keys.hasNext()) {
-                String key = keys.next();
-                int value = jsonObject.getInt(key);
-                clubInventory.put(key, value);
-            }
-        } catch (IOException e) {
-            showAlert("Error", "Could not load club inventory.");
-            e.printStackTrace();
-        }
-    }*/
+        try (FileReader reader = new FileReader("demo/clubInventory.json")) {
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
+            int courseID = Integer.parseInt((String) jsonObject.get("courseID"));
+            JSONArray clubList = (JSONArray) jsonObject.get("clubInventory");
 
-    public void loadClubInventory() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/com/example/demo/clubInventory.json")) {
-            if (inputStream == null) {
-                System.out.println("Error: clubInventory.json file not found.");
-                return;
+            rentalClubsList = new ArrayList<>();
+            for (Object clubObj : clubList) {
+                JSONObject clubJson = (JSONObject) clubObj;
+                int clubsID = ((Long) clubJson.get("clubsID")).intValue();
+                boolean isReserved = (Boolean) clubJson.get("isReserved");
+                String rentedTime = (String) clubJson.getOrDefault("rentedTime", "");
+                String returnedTime = (String) clubJson.getOrDefault("returnedTime", "");
+                String renterName = (String) clubJson.getOrDefault("renterName", "");
+
+                rentalClubsList.add(new RentalClubs(clubsID, rentedTime, returnedTime, courseID, isReserved, renterName));
             }
 
-            // Read the JSON file content
-            String content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            JSONObject clubInventory = new JSONObject(content);
-            // Process the JSON as needed
-        } catch (Exception e) {
+            clubTable.getItems().setAll(rentalClubsList);
+
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    private void populateClubListView() {
-        clubListView.getItems().clear();
-        clubInventory.forEach((club, quantity) -> clubListView.getItems().add(club + " - " + quantity + " available"));
     }
 
     @FXML
-    private void rentClub() {
-        String selectedClub = clubListView.getSelectionModel().getSelectedItem();
-        if (selectedClub != null && !rentalQuantityField.getText().isEmpty()) {
-            try {
-                int quantityToRent = Integer.parseInt(rentalQuantityField.getText());
-                String clubName = selectedClub.split(" - ")[0];
-                int availableQuantity = clubInventory.getOrDefault(clubName, 0);
-
-                if (quantityToRent <= availableQuantity) {
-                    clubInventory.put(clubName, availableQuantity - quantityToRent);
-                    updateClubInventoryFile();
-                    populateClubListView();
-                } else {
-                    showAlert("Error", "Requested quantity exceeds available stock.");
-                }
-            } catch (NumberFormatException e) {
-                showAlert("Error", "Please enter a valid quantity.");
-            }
+    private void confirmRental() {
+        RentalClubs selectedClub = clubTable.getSelectionModel().getSelectedItem();
+        if (selectedClub == null) {
+            showAlert("No Selection", "Please select a set of clubs to rent.");
+            return;
         }
+
+        if (selectedClub.isIsReserved()) {
+            showAlert("Already Reserved", "This set of clubs is already reserved. Please select another set.");
+            return;
+        }
+
+        if (renterNameField.getText().isEmpty() || rentalDatePicker.getValue() == null || rentalTimeField.getText().isEmpty()) {
+            showAlert("Missing Information", "Please enter your name, date, and time for the rental.");
+            return;
+        }
+
+        String renterName = renterNameField.getText();
+        String rentedTime = rentalDatePicker.getValue().toString() + " " + rentalTimeField.getText();
+        selectedClub.setReserved(true);
+        selectedClub.setRentedTime(rentedTime);
+        selectedClub.setRenterName(renterName);
+        selectedClub.setReturnedTime("");
+
+        updateJsonFile(selectedClub);
+
+        clubTable.refresh();
+        showAlert("Success", "The club set has been reserved successfully!");
     }
 
-    private void updateClubInventoryFile() {
-        try (FileWriter file = new FileWriter("src/main/resources/com/example/demo/clubInventory.json")) {
-            JSONObject jsonObject = new JSONObject(clubInventory);
-            file.write(jsonObject.toString(4));  // Pretty-print with indentation
-        } catch (IOException e) {
-            showAlert("Error", "Could not update club inventory.");
+    @FXML
+    private void returnClubs() {
+        RentalClubs selectedClub = clubTable.getSelectionModel().getSelectedItem();
+        if (selectedClub == null) {
+            showAlert("No Selection", "Please select a set of clubs to return.");
+            return;
+        }
+
+        if (!selectedClub.isIsReserved()) {
+            showAlert("Not Reserved", "This set of clubs is not currently reserved.");
+            return;
+        }
+
+        String returnedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        selectedClub.setReserved(false);
+        selectedClub.setReturnedTime(returnedTime);
+
+        updateJsonFile(selectedClub);
+
+        clubTable.refresh();
+        showAlert("Success", "The club set has been returned successfully!");
+    }
+
+    private void updateJsonFile(RentalClubs updatedClub) {
+        JSONParser jsonParser = new JSONParser();
+        try (FileReader reader = new FileReader("demo/clubInventory.json")) {
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
+            JSONArray clubList = (JSONArray) jsonObject.get("clubInventory");
+
+            for (Object clubObj : clubList) {
+                JSONObject clubJson = (JSONObject) clubObj;
+                int clubsID = ((Long) clubJson.get("clubsID")).intValue();
+                if (clubsID == updatedClub.getClubsID()) {
+                    clubJson.put("isReserved", updatedClub.isIsReserved());
+                    clubJson.put("rentedTime", updatedClub.getRentedTime());
+                    clubJson.put("returnedTime", updatedClub.getReturnedTime());
+                    clubJson.put("renterName", updatedClub.getRenterName());
+                    break;
+                }
+            }
+
+            try (FileWriter file = new FileWriter("demo/clubInventory.json")) {
+                file.write(jsonObject.toJSONString());
+                file.flush();
+            }
+
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
     }
