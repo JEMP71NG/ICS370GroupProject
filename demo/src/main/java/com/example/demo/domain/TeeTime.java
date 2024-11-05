@@ -1,40 +1,36 @@
 package com.example.demo.domain;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TeeTime {
-    private LocalDateTime teeTime;
-    private int courseID;
-    private ArrayList<member> members;
+    private final String time;
+    private final List<String> players;
 
-    public TeeTime(LocalDateTime teeTime, int courseID, ArrayList<member> members) {
-        this.teeTime = teeTime;
-        this.courseID = courseID;
-        this.members = members;
+    public TeeTime(String time) {
+        this.time = time;
+        this.players = new ArrayList<>();
     }
 
-    public LocalDateTime getTeeTime() {
-        return teeTime;
+    public String getTime() {
+        return time;
     }
 
-    public int getCourseID() {
-        return courseID;
+    public List<String> getPlayers() {
+        return players;
     }
 
-    public ArrayList<member> getMembers() {
-        return members;
-    }
-
-    public boolean reserve(member newMember) {
-        if (this.members.size() < 4) {  // Maximum of 4 members per tee time
-            this.members.add(newMember);
-            return true;
+    public void addPlayer(String playerName) {
+        if (!isFull()) {
+            players.add(playerName);
         }
-        return false;
     }
 
-    public boolean cancelReservation(member existingMember) {
-        return this.members.remove(existingMember);
+    public boolean removePlayer(String playerName) {
+        return players.remove(playerName);
+    }
+
+    public boolean isFull() {
+        return players.size() >= 4;
     }
 }

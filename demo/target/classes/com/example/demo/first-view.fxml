@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
 
-<VBox alignment="CENTER" spacing="15" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.GolfController">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.demo.GolfController"
+      spacing="10.0" alignment="TOP_LEFT">
+
     <padding>
-        <Insets bottom="20" left="20" right="20" top="20" />
+        <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
     </padding>
-    <Text style="-fx-font-size: 20; -fx-font-weight: bold;" text="Reserve or Cancel a Tee Time" />
 
-    <TableView fx:id="teeTimeTable" prefHeight="200" prefWidth="600">
-        <columns>
-            <TableColumn fx:id="nameColumn" text="Name" />
-            <TableColumn fx:id="dateColumn" text="Date" />
-            <TableColumn fx:id="timeColumn" text="Time" />
-        </columns>
-    </TableView>
-
-    <TextField fx:id="nameField" promptText="Enter Your Name" />
-    <DatePicker fx:id="dateTimeField" promptText="Select Date" />
-    <TextField fx:id="timeField" promptText="Enter Time (HH:mm)" />
-
-    <Button onAction="#confirmReservation" text="Confirm Reservation" />
-    <Button onAction="#cancelReservation" text="Cancel Reservation" />
+    <DatePicker fx:id="datePicker" onAction="#onDateSelected"/>
+    <ListView fx:id="teeTimesListView" prefHeight="200" prefWidth="300"/>
+    <TextField fx:id="playerNameField" promptText="Enter player name"/>
+    <Button text="Book Tee Time" onAction="#onBookTeeTime"/>
+    <Button text="Cancel Tee Time" onAction="#onCancelTeeTime"/>
+    <Button text="Show Players" onAction="#onShowPlayers"/>
 </VBox>
