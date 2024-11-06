@@ -84,11 +84,14 @@ public class GolfController {
                     showAlert("Error", "This tee time is fully booked.");
                     return;
                 }
-                players.add(playerName);
-                saveTeeSheet();
-                populateTeeTimesListView(formattedDate);
-                playerNameField.clear();
-                return;
+                else {
+                    players.add(playerName);
+                    saveTeeSheet();
+                    populateTeeTimesListView(formattedDate);
+                    playerNameField.clear();
+                    showAlert("Confirmation", "Tee Time booked successfully");
+                    return;
+                }
             }
         }
     }
@@ -118,6 +121,7 @@ public class GolfController {
                     saveTeeSheet();
                     populateTeeTimesListView(formattedDate);
                     playerNameField.clear();
+                    showAlert("Confirmation", "Tee time successfully cancelled");
                     return;
                 } else {
                     showAlert("Error", "Player not found in this tee time.");
