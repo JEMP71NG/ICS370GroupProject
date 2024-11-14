@@ -171,4 +171,5 @@ public class ClubRentalController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }
