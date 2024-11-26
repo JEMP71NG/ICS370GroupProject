@@ -20,6 +20,10 @@ public class TeeTime {
         return players;
     }
 
+    public boolean isFull() {
+        return players.size() >= 4;
+    }
+
     public void addPlayer(String playerName) {
         if (!isFull()) {
             players.add(playerName);
@@ -28,9 +32,5 @@ public class TeeTime {
 
     public boolean removePlayer(String playerName) {
         return players.remove(playerName);
-    }
-
-    public boolean isFull() {
-        return players.size() >= 4;
     }
 }

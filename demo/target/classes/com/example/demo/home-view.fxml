@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.geometry.Insets?>
-<VBox spacing="10" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.demo.HomeController">
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
-
-    <Label text="Golf Scheduling App Home Page" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-
-
-    <Button text="Reserve/Cancel Tee Time" onAction="#goToReserveTeeTime"/>
-    <Button text="Rent a Set of Clubs" onAction="#goToClubRental"/>
-
-
-    <Label fx:id="welcomeText" text="Status: Ready" style="-fx-text-fill: green;"/>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.demo.HomeController" spacing="10" alignment="CENTER">
+    <Label text="Golf Scheduling App Home Page" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+    <Button text="Reserve/Cancel Tee Time" fx:id="reserveCancelButton" onAction="#onReserveCancelTeeTimeClicked" />
+    <Button text="Rent a Set of Clubs" fx:id="rentClubsButton" onAction="#onRentClubsClicked" />
+    <Label text="Status: Ready" fx:id="statusLabel" style="-fx-font-size: 14px; -fx-text-fill: green;" />
 </VBox>

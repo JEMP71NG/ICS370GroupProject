@@ -1,11 +1,13 @@
 package com.example.demo;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 public class LoginService {
 
@@ -16,16 +18,24 @@ public class LoginService {
 
     public static User authenticate(String username, String password) {
         JSONParser parser = new JSONParser();
-        try (FileReader reader = new FileReader("users.json")) {
-            JSONObject jsonObject = (JSONObject) parser.parse(reader);
-            if(jsonObject.containsKey("username") && jsonObject.containsKey("password")) {
-            String readUsername = (String) jsonObject.get("username");
-            String readPassword = (String) jsonObject.get("password");
-            if(readPassword.equals(username) && readPassword.equals(password)) {
-                String roleString = (String) jsonObject.get("role");
-                Role role = Role.valueOf(roleString);
-                return new User(username, role);
-        }
+        try {
+            // Updated path to resolve users.json correctly
+            String filePath = Paths.get("demo", "users.json").toAbsolutePath().toString();
+            try (FileReader reader = new FileReader(filePath)) {
+                // Parse the file as an array
+                JSONArray users = (JSONArray) parser.parse(reader);
+
+                for (Object userObj : users) {
+                    JSONObject user = (JSONObject) userObj;
+                    String readUsername = (String) user.get("username");
+                    String readPassword = (String) user.get("password");
+
+                    if (readUsername.equals(username) && readPassword.equals(password)) {
+                        String roleString = (String) user.get("role");
+                        Role role = Role.valueOf(roleString.toUpperCase());
+                        return new User(username, role);
+                    }
+                }
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -35,7 +45,6 @@ public class LoginService {
 
     public static class User {
         public String username;
-        public String password;
         public Role role;
 
         public User(String username, Role role) {

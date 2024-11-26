@@ -2,11 +2,11 @@
   {
     "username": "admin",
     "password": "default",
-    "role": "Manager"
+    "role": "MANAGER"
   },
   {
     "username": "member1",
-    "password": "password",
-    "role": "Member"
+    "password": "pass123",
+    "role": "MEMBER"
   }
 ]

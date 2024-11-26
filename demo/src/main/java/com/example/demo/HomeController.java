@@ -1,45 +1,72 @@
 package com.example.demo;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import com.example.demo.domain.TeeTime;
-import com.example.demo.domain.member;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
+import java.io.IOException;
 
 public class HomeController {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+    @FXML
+    private Label statusLabel;
 
     @FXML
-    public void goToReserveTeeTime(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("first-view.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+    private void onReserveCancelTeeTimeClicked() {
+        System.out.println("Reserve/Cancel Tee Time button clicked.");
+        updateStatus("Navigating to Reserve/Cancel Tee Time...");
+        loadTeeSheetView();
     }
-    public void goToClubRental(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("clubRental.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+
+    @FXML
+    private void onRentClubsClicked() {
+        System.out.println("Rent a Set of Clubs button clicked.");
+        updateStatus("Navigating to Rent a Set of Clubs...");
+        loadRentClubsView();
+    }
+
+    private void loadTeeSheetView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/first-view.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) statusLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Tee Sheet");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load the Tee Sheet view.");
+        }
+    }
+
+    private void loadRentClubsView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/clubRental.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) statusLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Rent a Set of Golf Clubs");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load the Rent a Set of Clubs view.");
+        }
+    }
+
+    private void updateStatus(String message) {
+        statusLabel.setText("Status: " + message);
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
