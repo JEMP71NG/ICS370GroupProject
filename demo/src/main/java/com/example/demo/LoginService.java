@@ -14,15 +14,18 @@ public class LoginService {
         MANAGER
     }
 
-    public User authenticate(String username, String password) {
+    public static User authenticate(String username, String password) {
         JSONParser parser = new JSONParser();
         try (FileReader reader = new FileReader("users.json")) {
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
-            if (jsonObject.containsKey(username) && jsonObject.get(username).equals(password)) {
-                // Assuming the JSON structure now includes a "role" field for each user
-                String roleString = (String) jsonObject.get(username + "_role");
+            if(jsonObject.containsKey("username") && jsonObject.containsKey("password")) {
+            String readUsername = (String) jsonObject.get("username");
+            String readPassword = (String) jsonObject.get("password");
+            if(readPassword.equals(username) && readPassword.equals(password)) {
+                String roleString = (String) jsonObject.get("role");
                 Role role = Role.valueOf(roleString);
-                return new User(username, role);
+                return new User(userName, role);
+        }
             }
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -32,6 +35,7 @@ public class LoginService {
 
     public static class User {
         public String username;
+        public String password;
         public Role role;
 
         public User(String username, Role role) {
