@@ -10,7 +10,7 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.demo.GolfController"
-      spacing="10.0" alignment="TOP_LEFT">
+      spacing="10.0" >
 
     <padding>
         <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>

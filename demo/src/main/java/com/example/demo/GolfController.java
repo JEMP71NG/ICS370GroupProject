@@ -1,7 +1,5 @@
 package com.example.demo;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -9,15 +7,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+import com.example.demo.LoginService.Role;
+import com.example.demo.LoginService;
 
 public class GolfController {
     @FXML
@@ -36,6 +36,9 @@ public class GolfController {
     private JSONObject teeSheetData;
     private final String teeSheetFilePath = "teeSheet.json";
     private String selectedTeeTime;
+
+    private String currentUser = LoginService.getLoggedInUsername();
+    private Role currentUserRole = LoginService.getRole(currentUser);
 
     @FXML
     public void initialize() {
@@ -183,7 +186,6 @@ public class GolfController {
 
     private void populateTeeTimesListView(String date) {
         JSONArray teeTimes = (JSONArray) teeSheetData.get(date);
-
         if (teeTimes == null) {
             teeTimes = initializeTeeTimesForDate(date);
             teeSheetData.put(date, teeTimes);
@@ -191,14 +193,32 @@ public class GolfController {
         }
 
         ObservableList<String> items = FXCollections.observableArrayList();
-        for (Object obj : teeTimes) {
-            JSONObject teeTimeObj = (JSONObject) obj;
-            String time = (String) teeTimeObj.get("time");
-            JSONArray players = (JSONArray) teeTimeObj.get("players");
-            items.add(time + " (" + players.size() + "/4 booked)");
+
+        if (currentUserRole == Role.MANAGER) {
+            // Show all tee times
+            for (Object obj : teeTimes) {
+                JSONObject teeTimeObj = (JSONObject) obj;
+                String time = (String) teeTimeObj.get("time");
+                JSONArray players = (JSONArray) teeTimeObj.get("players");
+                items.add(time + " (" + players.size() + "/4 booked)"); // Add all tee times without filtering
+            }
+        } else if (currentUserRole == Role.MEMBER) {
+            // Show member's tee times and empty tee times
+            String memberName = getCurrentUserName(); // Get the current member's name
+            for (Object obj : teeTimes) {
+                JSONObject teeTimeObj = (JSONObject) obj;
+                String time = (String) teeTimeObj.get("time");
+                JSONArray players = (JSONArray) teeTimeObj.get("players");
+                if (players.contains(memberName) || players.isEmpty()) {
+                    items.add(time + " (" + players.size() + "/4 booked)");
+                }
+            }
         }
+
         teeTimesListView.setItems(items);
     }
+
+
 
     private JSONArray initializeTeeTimesForDate(String date) {
         JSONArray teeTimes = new JSONArray();
@@ -225,4 +245,20 @@ public class GolfController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    private Role getCurrentUserRole() {
+        String username = LoginService.getLoggedInUsername(); // Get the logged-in username
+        if (username != null) {
+            return LoginService.getRole(username); // Get the role based on the username
+        } else {
+            // No user is logged in
+            // Handle this case appropriately (e.g., redirect to login)
+            return Role.MEMBER; // Or some other default role
+        }
+    }
+
+    private String getCurrentUserName() {
+        return LoginService.getLoggedInUsername(); // Get the logged-in username
+    }
+
 }

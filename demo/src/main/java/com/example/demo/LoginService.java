@@ -16,6 +16,8 @@ public class LoginService {
         MANAGER
     }
 
+    private static String loggedInUsername;
+
     public static User authenticate(String username, String password) {
         JSONParser parser = new JSONParser();
         try {
@@ -33,6 +35,7 @@ public class LoginService {
                     if (readUsername.equals(username) && readPassword.equals(password)) {
                         String roleString = (String) user.get("role");
                         Role role = Role.valueOf(roleString.toUpperCase());
+                        loggedInUsername = readUsername;
                         return new User(username, role);
                     }
                 }
@@ -51,5 +54,33 @@ public class LoginService {
             this.username = username;
             this.role = role;
         }
+    }
+
+    public static String getLoggedInUsername() {
+        return loggedInUsername;
+    }
+
+    public static Role getRole(String username) {
+        String filePath = Paths.get("demo", "users.json").toAbsolutePath().toString();
+        try (FileReader reader = new FileReader(filePath)) {
+            JSONParser parser = new JSONParser();
+            JSONArray users = (JSONArray) parser.parse(reader);
+
+            for (Object obj : users) {
+                JSONObject user = (JSONObject) obj;
+                String userFromJson = (String) user.get("username");
+
+                if (userFromJson.equals(username)) {
+                    JSONObject roleObj = (JSONObject) parser.parse((String) user.get("role")); // Get the role as JSONObject
+                    String roleString = (String) roleObj.get("name"); // Extract the "name" field from the JSONObject
+                    return Role.valueOf(roleString.toUpperCase());
+                }
+            }
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., show an error message)
+        }
+
+        return Role.MEMBER; // Default to MEMBER role if there's an error or user not found
     }
 }
