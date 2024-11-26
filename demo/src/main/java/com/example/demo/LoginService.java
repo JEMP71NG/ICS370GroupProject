@@ -24,7 +24,7 @@ public class LoginService {
             if(readPassword.equals(username) && readPassword.equals(password)) {
                 String roleString = (String) jsonObject.get("role");
                 Role role = Role.valueOf(roleString);
-                return new User(userName, role);
+                return new User(username, role);
         }
             }
         } catch (IOException | ParseException e) {

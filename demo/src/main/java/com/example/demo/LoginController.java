@@ -52,8 +52,7 @@ public class LoginController {
                         String time = (String) jsonObject.get("time");
                         // ... extract other fields as needed ...
 
-                        TeeTime teeTime = new TeeTime(memberName, date, time);
-                        teeTimes.add(teeTime);
+
                     }
                 } catch (IOException | ParseException e) {
                     showAlert("Error", "Failed to retrieve tee times.");
