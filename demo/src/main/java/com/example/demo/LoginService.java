@@ -71,9 +71,9 @@ public class LoginService {
                 String userFromJson = (String) user.get("username");
 
                 if (userFromJson.equals(username)) {
-                    JSONObject roleObj = (JSONObject) parser.parse((String) user.get("role")); // Get the role as JSONObject
-                    String roleString = (String) roleObj.get("name"); // Extract the "name" field from the JSONObject
-                    return Role.valueOf(roleString.toUpperCase());
+                    String roleObj = (String) user.get("role"); // Get the role as JSONObject
+                    //String roleString = roleObj.toString();
+                    return Role.valueOf(roleObj.toUpperCase());
                 }
             }
         } catch (IOException | ParseException e) {
