@@ -26,6 +26,7 @@
     <Button onAction="#confirmRental" text="Confirm Rental" />
     <Button onAction="#returnClubs" text="Return Clubs" />
     <Button onAction="#goToHomeScreen" text="Home" />
+    <Button text="Logout" onAction="#logout" />
     <padding>
         <Insets bottom="20" left="20" right="20" top="20" />
     </padding>

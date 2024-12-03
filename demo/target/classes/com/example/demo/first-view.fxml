@@ -24,6 +24,5 @@
     <Button text="Logout" onAction="#logout" />
 
 
-
     <Label text="Status: Ready" fx:id="statusLabel" style="-fx-font-size: 14px; -fx-text-fill: green;" />
 </VBox>
