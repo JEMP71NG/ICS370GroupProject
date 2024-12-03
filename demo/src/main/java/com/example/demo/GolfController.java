@@ -287,4 +287,26 @@ public class GolfController {
         }
 
     }
+
+    @FXML
+    private void logout() {
+        LoginService.logout(); // Clear the session
+        navigateToLogin(); // Redirect to the login page
+    }
+
+    private void navigateToLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/login-view.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) statusLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load the Login view.");
+        }
+    }
+
 }

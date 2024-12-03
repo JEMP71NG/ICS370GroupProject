@@ -8,4 +8,5 @@
     <Button text="Reserve/Cancel Tee Time" fx:id="reserveCancelButton" onAction="#onReserveCancelTeeTimeClicked" />
     <Button text="Rent a Set of Clubs" fx:id="rentClubsButton" onAction="#onRentClubsClicked" />
     <Label text="Status: Ready" fx:id="statusLabel" style="-fx-font-size: 14px; -fx-text-fill: green;" />
+    <Button text="Logout" onAction="#logout" />
 </VBox>

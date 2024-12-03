@@ -83,4 +83,7 @@ public class LoginService {
 
         return Role.MEMBER; // Default to MEMBER role if there's an error or user not found
     }
+    public static void logout() {
+        loggedInUsername = null; // Clear the current session
+    }
 }
