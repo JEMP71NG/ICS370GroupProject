@@ -7,10 +7,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.demo.GolfController"
-      spacing="10.0" >
+<?import javafx.scene.control.Label?>
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="15" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.GolfController">
 
     <padding>
         <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
@@ -22,4 +20,8 @@
     <Button text="Book Tee Time" onAction="#onBookTeeTime"/>
     <Button text="Cancel Tee Time" onAction="#onCancelTeeTime"/>
     <Button text="Show Players" onAction="#onShowPlayers"/>
+    <Button onAction="#goToHomeScreen" text="Home" />
+
+
+    <Label text="Status: Ready" fx:id="statusLabel" style="-fx-font-size: 14px; -fx-text-fill: green;" />
 </VBox>

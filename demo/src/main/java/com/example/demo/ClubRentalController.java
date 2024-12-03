@@ -1,9 +1,14 @@
 package com.example.demo;
 
 import com.example.demo.domain.RentalClubs;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -42,6 +47,10 @@ public class ClubRentalController {
     private TextField rentalTimeField;
 
     private List<RentalClubs> rentalClubsList;
+
+    @FXML
+    private Label statusLabel;
+
 
     @FXML
     public void initialize() {
@@ -172,4 +181,24 @@ public class ClubRentalController {
         alert.showAndWait();
     }
 
+
+    public void goToHomeScreen() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/home-view.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) statusLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Home");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load the Home view.");
+        }
+
+
+
+
+    }
 }

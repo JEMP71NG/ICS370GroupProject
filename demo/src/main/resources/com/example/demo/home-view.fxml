@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.demo.HomeController" spacing="10" alignment="CENTER">
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="15" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.HomeController">
+
+
     <Label text="Golf Scheduling App Home Page" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
     <Button text="Reserve/Cancel Tee Time" fx:id="reserveCancelButton" onAction="#onReserveCancelTeeTimeClicked" />
     <Button text="Rent a Set of Clubs" fx:id="rentClubsButton" onAction="#onRentClubsClicked" />

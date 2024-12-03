@@ -1,8 +1,13 @@
 package com.example.demo;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -39,6 +44,10 @@ public class GolfController {
 
     private String currentUser = LoginService.getLoggedInUsername();
     private Role currentUserRole = LoginService.getRole(currentUser);
+
+    @FXML
+    private Label statusLabel;
+
 
     @FXML
     public void initialize() {
@@ -261,4 +270,21 @@ public class GolfController {
         return LoginService.getLoggedInUsername(); // Get the logged-in username
     }
 
+    public void goToHomeScreen(ActionEvent actionEvent) {
+
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/home-view.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) statusLabel.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Home");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load the Home view.");
+        }
+
+    }
 }
