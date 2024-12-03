@@ -57,18 +57,6 @@ public class HomeController {
             showAlert("Error", "Failed to load the Rent a Set of Clubs view.");
         }
     }
-
-    private void updateStatus(String message) {
-        statusLabel.setText("Status: " + message);
-    }
-
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
     @FXML
     private void logout() {
         LoginService.logout(); // Clear the session
@@ -88,6 +76,18 @@ public class HomeController {
             e.printStackTrace();
             showAlert("Error", "Failed to load the Login view.");
         }
+    }
+
+    private void updateStatus(String message) {
+        statusLabel.setText("Status: " + message);
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 }
